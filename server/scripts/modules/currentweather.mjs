@@ -140,6 +140,25 @@ class CurrentWeather extends WeatherDisplay {
 			this.getDataCallbacks.push(() => resolve(this.data));
 		});
 	}
+
+	async getTopSports() {
+		await json('https://site.api.espn.com/apis/personalized/v2/scoreboard/header?_ceID=espn-en-frontpage-index&configuration=SITE_DEFAULT&playabilitySource=playbackId&lang=en&region=us&contentorigin=espn&tz=America%2FNew_York&platform=web&showAirings=buy%2Clive%2Creplay&showZipLookup=true&buyWindow=1m&postalCode=30033')
+			.then((data) => {
+				console.log('Top sports data received:', data);
+				// get the top sports from the data
+				const sports = data.sports.slice(0, 5).map((sport) => ({
+					name: sport.name,
+					icon: sport.icon,
+					id: sport.id,
+				}));
+				this.topSports = sports;
+			}
+			).catch((error) => {
+				console.error('Error fetching top sports:', error);
+				this.topSports = [];
+			}
+			);
+	}
 }
 
 const shortConditions = (_condition) => {
